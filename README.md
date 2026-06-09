@@ -14,6 +14,14 @@ Figma to Unity UI exporter. It sends selected Figma layers to a local bridge and
 dotnet publish .\bridge\FigmaUnityBridge.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o .\bridge\publish-self-contained
 ```
 
+## Package Release
+
+```powershell
+.\scripts\package-release.ps1 -Version v0.1.0
+```
+
+The release zip is written to `artifacts/` and contains the Figma plugin, the Windows bridge executable, Unity helper scripts, and quick install notes.
+
 ## Start Bridge
 
 Run manually:

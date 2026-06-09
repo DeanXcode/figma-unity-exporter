@@ -3,6 +3,7 @@ bridge/bin/
 bridge/obj/
 bridge/publish/
 bridge/publish-self-contained/
+artifacts/
 
 # Local test Unity project artifacts
 bridge-test-project/
