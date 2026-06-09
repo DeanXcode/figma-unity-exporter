@@ -1,0 +1,809 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --bg: #1f1f1f;
+      --panel: #292929;
+      --panel-soft: #252525;
+      --line: #3a3a3a;
+      --line-strong: #4c4c4c;
+      --text: #f2f2f2;
+      --muted: #aaa;
+      --dim: #7d7d7d;
+      --blue: #18a0fb;
+      --blue-hover: #35adff;
+      --green-bg: #173522;
+      --green: #74d28a;
+      --orange-bg: #3a2a15;
+      --orange: #ffbd66;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      scrollbar-color: #555 #202020;
+      scrollbar-width: thin;
+    }
+
+    *::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: #202020;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      border: 2px solid #202020;
+      border-radius: 999px;
+      background: #555;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: #666;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 12px Inter, "Microsoft YaHei UI", "PingFang SC", sans-serif;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      min-height: 0;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      height: 46px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      background: #202020;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 6px;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .icon-button:hover,
+    .icon-button.active {
+      border-color: var(--line-strong);
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    .icon-button svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .content {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 12px;
+    }
+
+    .status {
+      min-height: 54px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--muted);
+      line-height: 18px;
+      white-space: pre-wrap;
+    }
+
+    .status.ok {
+      border-color: #275d36;
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .status.error {
+      border-color: #6a461c;
+      background: var(--orange-bg);
+      color: var(--orange);
+    }
+
+    .settings-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+    }
+
+    .settings-panel.open {
+      display: block;
+    }
+
+    .empty-state {
+      display: flex;
+      min-height: 230px;
+      margin-top: 10px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--dim);
+    }
+
+    .empty-state.hidden {
+      display: none;
+    }
+
+    .empty-inner {
+      max-width: 260px;
+    }
+
+    .empty-title {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+
+    .empty-copy {
+      margin-top: 4px;
+      line-height: 18px;
+    }
+
+    .empty-art {
+      width: 168px;
+      height: 112px;
+      opacity: 0.52;
+    }
+
+    .empty-art path,
+    .empty-art rect,
+    .empty-art polyline,
+    .empty-art line {
+      stroke: #8a8f99;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-group {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .group-title {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 18px;
+    }
+
+    .name-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .name-tools .wide {
+      grid-column: 1 / -1;
+    }
+
+    .tool-button {
+      height: 30px;
+      border-color: var(--line-strong);
+      border-radius: 6px;
+      background: #171717;
+      color: var(--muted);
+    }
+
+    .tool-button:hover {
+      color: var(--text);
+      background: var(--panel);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--dim);
+      line-height: 16px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 30px;
+      padding: 5px 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      background: #171717;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #666;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue);
+    }
+
+    .report {
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      overflow: hidden;
+    }
+
+    .report.has-content {
+      display: block;
+    }
+
+    .report-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 34px;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: #153855;
+      color: #7cc8ff;
+      font-weight: 700;
+    }
+
+    .tag.update {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric div {
+      padding: 9px 8px;
+      border-right: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .metric div:last-child {
+      border-right: 0;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .metric span {
+      color: var(--dim);
+      line-height: 16px;
+    }
+
+    .report-body {
+      padding: 9px 10px;
+      line-height: 18px;
+    }
+
+    .path {
+      color: var(--muted);
+      word-break: break-word;
+    }
+
+    .line {
+      margin-top: 6px;
+      color: var(--dim);
+    }
+
+    .warning {
+      color: var(--orange);
+    }
+
+    .footer {
+      flex: 0 0 auto;
+      padding: 10px 12px 12px;
+      border-top: 1px solid var(--line);
+      background: #202020;
+    }
+
+    button.primary {
+      width: 100%;
+      height: 42px;
+      background: var(--blue);
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: var(--blue-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <h1>Unity Prefab</h1>
+      <div class="toolbar">
+        <button class="icon-button" id="toggleSettings" title="高级设置" aria-label="高级设置">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05a2 2 0 0 1-2.83 2.83l-.05-.05a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 0 1-4 0v-.07a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.05.05a2 2 0 0 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 0 1 0-4h.07A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.05-.05a2 2 0 0 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.53V3a2 2 0 0 1 4 0v.07A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.05-.05a2 2 0 0 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9c.24.58.81.97 1.44.97H21a2 2 0 0 1 0 4h-.07A1.7 1.7 0 0 0 19.4 15Z"></path>
+          </svg>
+        </button>
+        <button class="icon-button" id="inspectStructure" title="检查结构" aria-label="检查结构">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M9 6h11"></path>
+            <path d="M9 12h11"></path>
+            <path d="M9 18h11"></path>
+            <path d="m4 6 1 1 2-2"></path>
+            <path d="m4 12 1 1 2-2"></path>
+            <path d="m4 18 1 1 2-2"></path>
+          </svg>
+        </button>
+        <button class="icon-button" id="checkBridge" title="检测连接" aria-label="检测连接">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.1.2l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"></path>
+            <path d="M14 11a5 5 0 0 0-7.1-.2l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"></path>
+          </svg>
+        </button>
+        <button class="icon-button" id="startBridge" title="复制启动命令" aria-label="复制启动命令">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="status" class="status">选择一个 Frame、组件或图层，然后导出。</div>
+
+      <div id="settingsPanel" class="settings-panel">
+        <div class="field">
+          <label for="prefabName">Prefab 名称</label>
+          <input id="prefabName" placeholder="默认使用选中 Frame 名称">
+        </div>
+        <div class="field">
+          <label for="destinationFolder">导出目录</label>
+          <input id="destinationFolder" value="Assets/FigmaUnityExport">
+        </div>
+        <div class="field">
+          <label for="exportTarget">导出目标</label>
+          <select id="exportTarget">
+            <option value="unity" selected>Unity Prefab</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fontStrategy">字体策略</label>
+          <select id="fontStrategy">
+            <option value="unity-existing" selected>使用指定 Unity TMP 字体</option>
+            <option value="figma-font">按 Figma 字体匹配/生成</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="unityFontGuid">TMP 字体 GUID</label>
+          <input id="unityFontGuid" value="ea525a267c9e3a042837ad4847a1ea09">
+        </div>
+        <div class="field">
+          <label for="bridgeUrl">Bridge 地址</label>
+          <input id="bridgeUrl" value="http://localhost:17890/export">
+        </div>
+        <div class="field">
+          <label for="projectRoot">Unity 工程路径</label>
+          <input id="projectRoot" placeholder="例如 D:\Projects\MyUnityGame">
+        </div>
+        <div class="field">
+          <label for="bridgeExe">Bridge EXE 路径</label>
+          <input id="bridgeExe" placeholder="例如 .\bridge\publish-self-contained\FigmaUnityBridge.exe">
+        </div>
+        <div class="settings-group">
+          <div class="group-title">命名助手</div>
+          <div class="name-tools">
+            <button class="tool-button" data-rename="menu">menu_</button>
+            <button class="tool-button" data-rename="tab">tab_</button>
+            <button class="tool-button" data-rename="btn">btn_</button>
+            <button class="tool-button" data-rename="state-normal">state_normal</button>
+            <button class="tool-button" data-rename="state-selected">state_selected</button>
+            <button class="tool-button wide" id="createMenuTemplate">生成菜单模板</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-inner">
+          <svg class="empty-art" viewBox="0 0 168 112" fill="none" aria-hidden="true">
+            <path d="M84 8 88 18 98 22 88 26 84 36 80 26 70 22 80 18Z" stroke-width="2"></path>
+            <rect x="42" y="44" width="72" height="46" rx="6" stroke-width="2"></rect>
+            <path d="M42 56h72" stroke-width="2"></path>
+            <path d="M56 72h25" stroke-width="2"></path>
+            <path d="M56 82h42" stroke-width="2"></path>
+            <path d="M123 68 132 77 151 56" stroke-width="3"></path>
+            <path d="M20 92c9-6 18-6 27 0M110 98c13-7 25-7 38 0" stroke-width="2"></path>
+            <line x1="26" y1="31" x2="28" y2="31" stroke-width="2"></line>
+            <line x1="139" y1="30" x2="141" y2="30" stroke-width="2"></line>
+            <line x1="31" y1="102" x2="33" y2="102" stroke-width="2"></line>
+          </svg>
+          <div class="empty-title">准备导出</div>
+          <div class="empty-copy">选中 Figma 里的界面节点，然后点击底部按钮生成或更新 Unity Prefab。</div>
+        </div>
+      </div>
+
+      <div id="reportSection" class="report">
+        <div class="report-head">
+          <span id="reportTitle">最近导出</span>
+          <span id="modeTag" class="tag">新建</span>
+        </div>
+        <div class="metric">
+          <div><strong id="nodeCount">0</strong><span id="nodeLabel">节点</span></div>
+          <div><strong id="imageCount">0</strong><span id="imageLabel">图片</span></div>
+          <div><strong id="textCount">0</strong><span id="textLabel">文本</span></div>
+        </div>
+        <div id="reportBody" class="report-body"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="primary" id="exportPrefab">导出选中内容</button>
+    </div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const settingsPanelEl = document.getElementById("settingsPanel");
+    const toggleSettingsEl = document.getElementById("toggleSettings");
+    const emptyStateEl = document.getElementById("emptyState");
+    const reportSectionEl = document.getElementById("reportSection");
+    const reportTitleEl = document.getElementById("reportTitle");
+    const reportBodyEl = document.getElementById("reportBody");
+    const modeTagEl = document.getElementById("modeTag");
+    const nodeCountEl = document.getElementById("nodeCount");
+    const imageCountEl = document.getElementById("imageCount");
+    const textCountEl = document.getElementById("textCount");
+    const nodeLabelEl = document.getElementById("nodeLabel");
+    const imageLabelEl = document.getElementById("imageLabel");
+    const textLabelEl = document.getElementById("textLabel");
+    const bridgeInput = document.getElementById("bridgeUrl");
+    const projectInput = document.getElementById("projectRoot");
+    const bridgeExeInput = document.getElementById("bridgeExe");
+    const prefabNameInput = document.getElementById("prefabName");
+    const destinationFolderInput = document.getElementById("destinationFolder");
+    const exportTargetInput = document.getElementById("exportTarget");
+    const fontStrategyInput = document.getElementById("fontStrategy");
+    const unityFontGuidInput = document.getElementById("unityFontGuid");
+    let reportVisible = false;
+    let busy = false;
+
+    toggleSettingsEl.onclick = () => {
+      const open = !settingsPanelEl.classList.contains("open");
+      settingsPanelEl.classList.toggle("open", open);
+      toggleSettingsEl.classList.toggle("active", open);
+      updateEmptyState();
+    };
+
+    document.getElementById("inspectStructure").onclick = () => {
+      busy = true;
+      clearReport();
+      setStatus("正在检查结构...");
+      parent.postMessage({
+        pluginMessage: {
+          type: "inspect-structure",
+        }
+      }, "*");
+    };
+
+    document.getElementById("startBridge").onclick = () => {
+      busy = true;
+      updateEmptyState();
+      setStatus("正在复制启动命令...");
+      parent.postMessage({
+        pluginMessage: {
+          type: "start-bridge",
+          projectRoot: projectInput.value.trim(),
+          prefix: bridgeInput.value.trim().replace(/\/export$/, "/"),
+          bridgeUrl: bridgeInput.value.trim(),
+          exePath: bridgeExeInput.value.trim() || "FigmaUnityBridge.exe",
+        }
+      }, "*");
+    };
+
+    document.getElementById("checkBridge").onclick = () => {
+      busy = true;
+      updateEmptyState();
+      setStatus("正在检测 Bridge...");
+      parent.postMessage({
+        pluginMessage: {
+          type: "check-bridge",
+          bridgeUrl: bridgeInput.value.trim(),
+        }
+      }, "*");
+    };
+
+    document.getElementById("exportPrefab").onclick = () => {
+      busy = true;
+      clearReport();
+      setStatus("正在导出...");
+      parent.postMessage({
+        pluginMessage: {
+          type: "export-prefab",
+          bridgeUrl: bridgeInput.value.trim(),
+          prefabName: prefabNameInput.value.trim(),
+          destinationFolder: destinationFolderInput.value.trim(),
+          exportTarget: exportTargetInput.value,
+          fontStrategy: fontStrategyInput.value,
+          unityFontGuid: unityFontGuidInput.value.trim(),
+        }
+      }, "*");
+    };
+
+    for (const button of document.querySelectorAll("[data-rename]")) {
+      button.onclick = () => {
+        parent.postMessage({
+          pluginMessage: {
+            type: "rename-layer",
+            kind: button.getAttribute("data-rename"),
+          }
+        }, "*");
+      };
+    }
+
+    document.getElementById("createMenuTemplate").onclick = () => {
+      busy = true;
+      updateEmptyState();
+      setStatus("正在生成菜单模板...");
+      parent.postMessage({
+        pluginMessage: {
+          type: "create-menu-template",
+        }
+      }, "*");
+    };
+
+    window.onmessage = (event) => {
+      const message = event.data.pluginMessage;
+      if (!message) return;
+
+      if (message.type === "progress") {
+        busy = true;
+        updateEmptyState();
+        setStatus(message.message);
+      }
+
+      if (message.type === "prefab-done") {
+        busy = false;
+        setStatus(message.isUpdate ? "更新完成" : "导出完成", "ok");
+        renderReport(message);
+      }
+
+      if (message.type === "structure-report") {
+        busy = false;
+        setStatus(message.summary && message.summary.warningCount > 0 ? "结构检查完成，有命名问题" : "结构检查完成", message.summary && message.summary.warningCount > 0 ? "error" : "ok");
+        renderStructureReport(message);
+      }
+
+      if (message.type === "rename-done") {
+        setStatus(message.message, "ok");
+      }
+
+      if (message.type === "error") {
+        busy = false;
+        updateEmptyState();
+        setStatus(message.message, "error");
+      }
+
+      if (message.type === "bridge-health") {
+        busy = false;
+        updateEmptyState();
+        setStatus(message.message, "ok");
+      }
+
+      if (message.type === "copy-command") {
+        copyText(message.command);
+      }
+    };
+
+    function renderReport(message) {
+      const report = message.report || {};
+      const warnings = collectWarnings(report);
+      reportTitleEl.textContent = `最近导出 · ${getExportTargetLabel(message.exportTarget || report.exportTarget)}`;
+      modeTagEl.textContent = message.isUpdate ? "更新" : "新建";
+      modeTagEl.classList.toggle("update", !!message.isUpdate);
+      nodeLabelEl.textContent = "节点";
+      imageLabelEl.textContent = "图片";
+      textLabelEl.textContent = "文本";
+      nodeCountEl.textContent = number(report.nodeCount, message.nodeCount);
+      imageCountEl.textContent = number(report.imageCount, message.imageCount);
+      textCountEl.textContent = number(report.textCount, 0);
+      reportBodyEl.innerHTML = [
+        `<div class="path">${escapeHtml(message.mainAssetPath || message.prefabPath || "")}</div>`,
+        warnings.length > 0 ? `<div class="line warning">${escapeHtml(warnings.join(" / "))}</div>` : "",
+        buildRuleSummary(report),
+        buildMenuSummary(report),
+        message.reportPath ? `<div class="line">报告：${escapeHtml(message.reportPath || "")}</div>` : "",
+      ].filter(Boolean).join("");
+      reportVisible = true;
+      reportSectionEl.classList.add("has-content");
+      updateEmptyState();
+    }
+
+    function buildRuleSummary(report) {
+      const menuCount = number(report.menuCount, 0);
+      const stateGroupCount = number(report.stateGroupCount, 0);
+      const hiddenStateCount = number(report.hiddenStateCount, 0);
+      const autoButtonCount = Array.isArray(report.autoButtons) ? report.autoButtons.length : 0;
+      if (menuCount + stateGroupCount + hiddenStateCount + autoButtonCount === 0) return "";
+      return `<div class="line">菜单：${menuCount}，状态组：${stateGroupCount}，隐藏状态：${hiddenStateCount}，自动按钮：${autoButtonCount}</div>`;
+    }
+
+    function buildMenuSummary(report) {
+      if (!Array.isArray(report.menus) || report.menus.length === 0) return "";
+      const parts = report.menus.map((menu) => {
+        const tabs = Array.isArray(menu.tabs) ? menu.tabs : [];
+        const missing = tabs.filter((tab) => !tab.hasNormal || !tab.hasSelected).length;
+        return `${menu.key || menu.name}(${tabs.length}${missing > 0 ? `, 缺${missing}` : ""})`;
+      });
+      return `<div class="line">${escapeHtml(parts.join(" / "))}</div>`;
+    }
+
+    function getExportTargetLabel(exportTarget) {
+      switch (String(exportTarget || "unity").toLowerCase()) {
+        case "unity":
+        case "unity-prefab":
+        case "prefab":
+          return "Unity Prefab";
+        default:
+          return exportTarget || "Unity Prefab";
+      }
+    }
+
+    function renderStructureReport(message) {
+      const summary = message.summary || {};
+      const warnings = Array.isArray(message.warnings) ? message.warnings : [];
+      const menus = Array.isArray(message.menus) ? message.menus : [];
+      reportTitleEl.textContent = "结构检查";
+      modeTagEl.textContent = warnings.length > 0 ? "需处理" : "正常";
+      modeTagEl.classList.toggle("update", warnings.length === 0);
+      nodeLabelEl.textContent = "菜单";
+      imageLabelEl.textContent = "Tab";
+      textLabelEl.textContent = "状态";
+      nodeCountEl.textContent = number(summary.menuCount, 0);
+      imageCountEl.textContent = number(summary.tabCount, 0);
+      textCountEl.textContent = number(summary.stateCount, 0);
+      reportBodyEl.innerHTML = [
+        `<div class="path">隐藏状态层：${number(summary.hiddenStateCount, 0)}，按钮：${number(summary.buttonCount, 0)}</div>`,
+        menus.length > 0 ? `<div class="line">${escapeHtml(menus.map((item) => `${item.name}(${item.tabCount})`).join(" / "))}</div>` : "",
+        warnings.length > 0 ? `<div class="line warning">${escapeHtml(warnings.join(" / "))}</div>` : "",
+      ].filter(Boolean).join("");
+      reportVisible = true;
+      reportSectionEl.classList.add("has-content");
+      updateEmptyState();
+    }
+
+    function collectWarnings(report) {
+      const values = [];
+      if (Array.isArray(report.missingFonts) && report.missingFonts.length > 0) {
+        values.push(`缺失字体 ${report.missingFonts.length}`);
+      }
+      if (Array.isArray(report.warnings) && report.warnings.length > 0) {
+        values.push(`${report.warnings.length} 条提示`);
+      }
+      return values;
+    }
+
+    function clearReport() {
+      reportVisible = false;
+      reportSectionEl.classList.remove("has-content");
+      reportBodyEl.innerHTML = "";
+      updateEmptyState();
+    }
+
+    function updateEmptyState() {
+      const settingsOpen = settingsPanelEl.classList.contains("open");
+      emptyStateEl.classList.toggle("hidden", settingsOpen || reportVisible || busy);
+    }
+
+    function setStatus(value, state) {
+      statusEl.textContent = value;
+      statusEl.classList.remove("ok", "error");
+      if (state) statusEl.classList.add(state);
+    }
+
+    function number(value, fallback) {
+      return typeof value === "number" ? value : fallback;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function copyText(value) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).catch(() => fallbackCopy(value));
+        return;
+      }
+
+      fallbackCopy(value);
+    }
+
+    function fallbackCopy(value) {
+      const textArea = document.createElement("textarea");
+      textArea.value = value;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-1000px";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+  </script>
+</body>
+</html>

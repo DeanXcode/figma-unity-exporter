@@ -1,0 +1,20 @@
+{
+  "name": "Codex Unity Exporter",
+  "id": "codex-unity-exporter",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "http://localhost:17890"
+    ],
+    "reasoning": "The plugin sends exported PNG layers to the local Unity bridge running on this machine.",
+    "devAllowedDomains": [
+      "http://localhost:17890"
+    ]
+  },
+  "editorType": [
+    "figma"
+  ]
+}
