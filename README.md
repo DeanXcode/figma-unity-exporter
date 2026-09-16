@@ -68,7 +68,7 @@ Keep the included `.meta` files. Some generated prefab components depend on stab
 - Text horizontal and vertical alignment are synced to TMP alignment fields.
 - Figma auto-width text disables TMP word wrapping.
 - Fixed-width auto-height text or explicit line breaks enable TMP word wrapping.
-- Layers named with `btn_` or `tab_` get the configured Unity button component.
+- Layers named with `btn_` or `tab_` get Unity's default UGUI `Button` component.
 - Layers named with `menu_`, `tab_`, and `state_` generate menu/state switcher data.
 - Visible leaf layers export as PNG sprites and Unity `Image` components.
 

@@ -336,7 +336,7 @@ internal static partial class Program
             yaml.AppendLine("  m_GameObject: {fileID: " + nodeIds.GameObject + "}");
             yaml.AppendLine("  m_Enabled: 1");
             yaml.AppendLine("  m_EditorHideFlags: 0");
-            yaml.AppendLine("  m_Script: {fileID: 11500000, guid: " + CustomButtonScriptGuid + ", type: 3}");
+            yaml.AppendLine("  m_Script: {fileID: 11500000, guid: " + UnityButtonScriptGuid + ", type: 3}");
             yaml.AppendLine("  m_Name: ");
             yaml.AppendLine("  m_EditorClassIdentifier: ");
             yaml.AppendLine("  m_Navigation:");

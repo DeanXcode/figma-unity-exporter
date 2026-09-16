@@ -13,7 +13,7 @@ internal static partial class Program
     private const string DefaultPrefix = "http://localhost:17890/";
     private const string ProtocolName = "codex-unity-bridge";
     private const string ImageScriptGuid = "fe87c0e1cc204ed48ad3b37840f39efc";
-    private const string CustomButtonScriptGuid = "a22eb25ef0b1bfc468116c28d2208722";
+    private const string UnityButtonScriptGuid = "4e29b1a8efbd4b44bb3f3716e73f07ff";
     private const string TextMeshProScriptGuid = "f4688fdb7df04437aeb418b961361dc5";
     private const string FigmaMenuSwitcherScriptGuid = "c0d3f19a000000000000000000000101";
     private const string FigmaStateSwitcherScriptGuid = "c0d3f19a000000000000000000000102";
