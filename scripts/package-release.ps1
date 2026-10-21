@@ -74,6 +74,7 @@ if (-not $copiedBridge) {
 Copy-Item -LiteralPath (Join-Path $repoRoot "figma-plugin") -Destination (Join-Path $stageRoot "figma-plugin") -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $repoRoot "unity") -Destination (Join-Path $stageRoot "unity") -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $repoRoot "README.md") -Destination (Join-Path $stageRoot "README.md") -Force
+Copy-Item -LiteralPath (Join-Path $repoRoot "README.zh-CN.md") -Destination (Join-Path $stageRoot "README.zh-CN.md") -Force
 
 $commit = "unknown"
 try {
@@ -117,6 +118,8 @@ Bridge health check:
 ```text
 http://localhost:17890/health
 ```
+
+See `README.md` for full English instructions or `README.zh-CN.md` for Chinese instructions.
 '@
 
 [System.IO.File]::WriteAllText(

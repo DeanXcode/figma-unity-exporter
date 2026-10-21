@@ -2,8 +2,21 @@
 setlocal
 
 set "ROOT=%~dp0"
-set "PROJECT=D:\Unreal\Svn"
 set "BRIDGE=%ROOT%bridge\bin\Release\net8.0-windows\FigmaUnityBridge.exe"
+
+if "%~1"=="" (
+  set /p "PROJECT=Enter Unity project path: "
+) else (
+  set "PROJECT=%~1"
+)
+
+if not exist "%PROJECT%\Assets" (
+  echo Unity project Assets folder not found:
+  echo %PROJECT%\Assets
+  echo Usage: start-bridge.bat "D:\Projects\MyUnityGame"
+  pause
+  exit /b 1
+)
 
 if not exist "%BRIDGE%" (
   echo Bridge not found:
